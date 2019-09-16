@@ -12,9 +12,18 @@ git clone https://github.com/hjdhnx/lwsoft.git
 | bitcolor.go      | 找图找色模块  |   用于windows窗口内找图找色   |
 | mouse.go        |   鼠标操作模块 |   用于模拟鼠标的操作如鼠标左键单击，移动  |
 | window.go        |  窗口操作模块  |   用于窗口设置，窗口绑定等操作  |
+| system.go        |  系统操作模块  |   封装的乐玩系列系统操作如UAC控制  |
 
 
 ## mywin32api 包说明
+
+
+| 包内文件英文名        | 文件中文意思    |  作用  |
+| --------    | -----: | :----:  |
+| mouse.go      | win32api的鼠标操作集合  |   调用win32api操作鼠标   |
+| window.go      | win32api的窗口操作集合   |   调用win32api窗口   |
+
+## others 包说明
 
 
 | 包内文件英文名        | 文件中文意思    |  作用  |
@@ -28,6 +37,7 @@ git clone https://github.com/hjdhnx/lwsoft.git
 | 包内文件英文名        | 文件中文意思    |  作用  |
 | --------    | -----: | :----:  |
 | lw9.09.dll      | 乐玩最新com组件  |   深度封状底层模拟操作   |
+| reg.bat      | 注册乐玩com批处理命令  |   快速注册com到系统   |
 
 ## tools 包说明
 
@@ -39,7 +49,7 @@ git clone https://github.com/hjdhnx/lwsoft.git
 | 接口查看器.exe      | 接口查看器  |   查看com接口函数并支持可视化注册与卸载   |
 
 
-## bin 包说明
+## 跟目录文件说明
 
 | 包内文件英文名        | 文件中文意思    |  作用  |
 | --------    | -----: | :----:  |

@@ -5,8 +5,9 @@ package main
 import (
 	"./mylwsoft"
 	"./mywin32api"
+	"./others"
 	"fmt"
-	"github.com/lxn/win"
+	"github.com/go-ole/go-ole"
 	"strconv"
 	"strings"
 	"time"
@@ -62,22 +63,26 @@ func runall(lw *mylwsoft.LwSoft, task string) {
 	}
 }
 
-func main() {
+func maintest() {
+
 	//vcl.ShowMessage("hello  world")
-	mywin32api.SleepIntS(1)
-	win.GetWindow(win.HWND(0), 5)
+
+	//mywin32api.SleepIntS(1)
+	//win.GetWindow(win.HWND(0), 5)
+
 	//mylwsoft.MessageBox(0,"系统提示","这是复杂的弹窗",win.MB_YESNO)
-	ret := mywin32api.Confirm("系统提示", "是否停止程序?")
-	if ret == 6 {
-		fmt.Println("你点了确定,程序结束")
-		return
-	} else if ret == 7 {
-		fmt.Println("你点了取消,输出hello world")
-	}
-	mywin32api.MessageBoxE("系统提示", "这是简单的弹窗\n你好,世界！")
-	fmt.Println(ret)
-	//ole.CoInitializeEx(0, 0)
-	//defer ole.CoUninitialize()
+
+	//ret := mywin32api.Confirm("系统提示", "是否停止程序?")
+	//if ret == 6 {
+	//	fmt.Println("你点了确定,程序结束")
+	//	return
+	//} else if ret == 7 {
+	//	fmt.Println("你点了取消,输出hello world")
+	//}
+	//mywin32api.MessageBoxE("系统提示", "这是简单的弹窗\n你好,世界！")
+	//fmt.Println(ret)
+	ole.CoInitializeEx(0, 0)
+	defer ole.CoUninitialize()
 	lw, err := mylwsoft.NewLwSoft()
 	if err != nil {
 		fmt.Println("err:", err)
@@ -116,4 +121,29 @@ func main() {
 			time.Sleep(1500 * time.Millisecond)
 		}
 	}
+
+}
+
+func main() {
+	//maintest()
+	err := others.Regsvrlw("dll/lw9.09.dll", "dll/reg.bat")
+	if err != nil {
+		fmt.Println("注册失败！")
+	} else {
+		fmt.Println("注册成功！")
+		ole.CoInitializeEx(0, 0)
+		defer ole.CoUninitialize()
+		lw, err := mylwsoft.NewLwSoft()
+		if err != nil {
+			fmt.Println("err:", err)
+			fmt.Println("插件注册失败！请以管理员方式运行此程序或手动注册")
+			return
+		}
+		fmt.Println("版本号 version:", lw.Ver())
+		ret := lw.SetUAC(0)
+		if ret == 1 {
+			fmt.Println("UAC关闭成功，重启计算机生效")
+		}
+	}
+	others.Put()
 }
