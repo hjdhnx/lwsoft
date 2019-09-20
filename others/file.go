@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -50,8 +51,8 @@ func CallEXE(programeName string, canshu string) error {
 func GetCurrentPath() string {
 	s, _ := exec.LookPath(os.Args[0])
 	i := strings.LastIndex(s, "\\")
-	path := string(s[0 : i+1])
-	return path
+	pathA := string(s[0 : i+1])
+	return pathA
 }
 
 //注册com
@@ -77,6 +78,30 @@ func Regsvrlw(dllpath, batpath string) error {
 		return nil
 	}
 }
+
+func GetFile(files string) (fpath, filename, filetype string) {
+	paths, fileName := filepath.Split(files)
+	return paths, fileName, path.Ext(files)
+}
+
+func PathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
+}
+func Checkdir(dir string) {
+	exist, err := PathExists(dir)
+	if !exist {
+		err = os.Mkdir(dir, os.ModePerm)
+		panic(err)
+	}
+}
+
 func Put() {
 	fmt.Printf("任意键继续...")
 	input := ""

@@ -13,7 +13,13 @@ import (
 	"time"
 )
 
-var state string
+var (
+	state string
+)
+
+const (
+	nowversion = 2.1
+)
 
 func runall(lw *mylwsoft.LwSoft, task string) {
 	switch task {
@@ -124,26 +130,51 @@ func maintest() {
 
 }
 
-func main() {
-	//maintest()
-	err := others.Regsvrlw("dll/lw9.09.dll", "dll/reg.bat")
-	if err != nil {
-		fmt.Println("注册失败！")
+func httpdemo() string {
+	var updatelink string
+	ret := others.Request("https://gitee.com/hjdhnx/lolc/raw/master/update.txt")
+	res := others.JsonStr2map(ret)
+	fmt.Println(res)
+	keys := others.GetMapKeys(res)
+	fmt.Println(keys)
+	fmt.Println("当前版本号:", nowversion)
+	version := res["版本号"]
+	fmt.Println("服务器最新版本号：" + version)
+	ver := others.S2f(version)
+	if ver > nowversion {
+		updatelink = res["更新地址"]
+		fmt.Println("发现更新,最新版本下载地址为:" + updatelink)
+		return updatelink
 	} else {
-		fmt.Println("注册成功！")
-		ole.CoInitializeEx(0, 0)
-		defer ole.CoUninitialize()
-		lw, err := mylwsoft.NewLwSoft()
-		if err != nil {
-			fmt.Println("err:", err)
-			fmt.Println("插件注册失败！请以管理员方式运行此程序或手动注册")
-			return
-		}
-		fmt.Println("版本号 version:", lw.Ver())
-		ret := lw.SetUAC(0)
-		if ret == 1 {
-			fmt.Println("UAC关闭成功，重启计算机生效")
-		}
+		fmt.Println("当前软件已经是最新版")
+		return updatelink
 	}
-	others.Put()
+}
+
+func main() {
+	updatelink := httpdemo()
+	if updatelink != "" {
+		others.Httpdownload(updatelink, "download")
+	}
+	//maintest()
+	//err := others.Regsvrlw("dll/lw9.09.dll", "dll/reg.bat")
+	//if err != nil {
+	//	fmt.Println("注册失败！")
+	//} else {
+	//	fmt.Println("注册成功！")
+	//	ole.CoInitializeEx(0, 0)
+	//	defer ole.CoUninitialize()
+	//	lw, err := mylwsoft.NewLwSoft()
+	//	if err != nil {
+	//		fmt.Println("err:", err)
+	//		fmt.Println("插件注册失败！请以管理员方式运行此程序或手动注册")
+	//		return
+	//	}
+	//	fmt.Println("版本号 version:", lw.Ver())
+	//	ret := lw.SetUAC(0)
+	//	if ret == 1 {
+	//		fmt.Println("UAC关闭成功，重启计算机生效")
+	//	}
+	//}
+	//others.Put()
 }
